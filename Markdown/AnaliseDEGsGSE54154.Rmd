@@ -1,0 +1,85 @@
+---
+title: "Análise dos DEGs do array GSE54154"
+output: html_notebook
+date: "'r sys.date()'"
+---
+
+#### Ler os DEGs gerados para o array
+```{r}
+library(tidyverse)
+load(file = "Data/GSE54154_Diabetes/DEGs.RData")
+```
+
+
+#### Volcano plot
+```{r}
+DEGs$Controles %>% 
+  mutate(Cond = ifelse(logFC >= 1.5 & PValue < .01,"Up",
+                       ifelse(logFC <= 1.5  & PValue < .01,"Down","ns"))) %>% 
+  ggplot(aes(x = logFC, y = -log10(PValue),col = Cond)) +
+  geom_point() +
+  scale_color_manual(values = c("Up" = "Purple", "ns" = "black","Down" = "red")) +
+  theme_bw() +
+  labs(title = "Volcano plot GSE54154 - M1vsM2")
+```
+```{r}
+DEGs$Celular_Diabetes %>% 
+  mutate(Cond = ifelse(logFC >= 1.5 & PValue < .01,"Up",
+                       ifelse(logFC <= 1.5  & PValue < .01,"Down","ns"))) %>% 
+  ggplot(aes(x = logFC, y = -log10(PValue),col = Cond)) +
+  geom_point() +
+  scale_color_manual(values = c("Up" = "Purple", "ns" = "black","Down" = "red")) +
+  theme_bw() +
+  labs(title = "Volcano plot GSE54154 - M1_d2vsM2_d2")
+```
+```{r}
+DEGs$Diabetes_M1 %>% 
+  mutate(Cond = ifelse(logFC >= 1.5 & PValue < .01,"Up",
+                       ifelse(logFC <= 1.5  & PValue < .01,"Down","ns"))) %>% 
+  ggplot(aes(x = logFC, y = -log10(PValue),col = Cond)) +
+  geom_point() +
+  scale_color_manual(values = c("Up" = "Purple", "ns" = "black","Down" = "red")) +
+  theme_bw() +
+  labs(title = "Volcano plot GSE54154 - M1vsM1_d2")
+```
+```{r}
+DEGs$Diabetes_M2 %>% 
+  mutate(Cond = ifelse(logFC >= 1.5 & PValue < .01,"Up",
+                       ifelse(logFC <= 1.5  & PValue < .01,"Down","ns"))) %>% 
+  ggplot(aes(x = logFC, y = -log10(PValue),col = Cond)) +
+  geom_point() +
+  scale_color_manual(values = c("Up" = "Purple", "ns" = "black","Down" = "red")) +
+  theme_bw() +
+  labs(title = "Volcano plot GSE54154 - M2vsM2_d2")
+```
+
+#### Contar Ups & Downs
+```{r}
+DEGs$Controles %>% 
+  mutate(Cond = ifelse(logFC >= 1.5 & PValue < .01,"Up",
+                       ifelse(logFC <= 1.5  & PValue < .01,"Down","ns"))) %>% 
+  group_by(Cond) %>% 
+  tally()
+```
+```{r}
+DEGs$Celular_Diabetes %>% 
+  mutate(Cond = ifelse(logFC >= 1.5 & PValue < .01,"Up",
+                       ifelse(logFC <= 1.5  & PValue < .01,"Down","ns"))) %>% 
+  group_by(Cond) %>% 
+  tally()
+```
+```{r}
+DEGs$Diabetes_M1 %>% 
+  mutate(Cond = ifelse(logFC >= 1.5 & PValue < .01,"Up",
+                       ifelse(logFC <= 1.5  & PValue < .01,"Down","ns"))) %>% 
+  group_by(Cond) %>% 
+  tally()
+```
+```{r}
+DEGs$Diabetes_M2 %>% 
+  mutate(Cond = ifelse(logFC >= 1.5 & PValue < .01,"Up",
+                       ifelse(logFC <= 1.5  & PValue < .01,"Down","ns"))) %>% 
+  group_by(Cond) %>% 
+  tally()
+```
+
