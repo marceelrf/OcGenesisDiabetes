@@ -48,3 +48,19 @@ data %>%
   tally()
 ```
 
+###Separar os DEGs por Up e Down
+```{r}
+OcMouseUp <- data %>% 
+  mutate(Cond = ifelse(logFC >= 1 & adj.P.Val < .01,"Up",
+                       ifelse(logFC <= -1  & adj.P.Val < .01,"Down","ns"))) %>% 
+  filter(Cond == "Up")
+OcMouseUp
+```
+```{r}
+OcMouseDown <- data %>% 
+  mutate(Cond = ifelse(logFC >= 1 & adj.P.Val < .01,"Up",
+                       ifelse(logFC <= -1  & adj.P.Val < .01,"Down","ns"))) %>% 
+  filter(Cond == "Down")
+OcMouseDown
+```
+
