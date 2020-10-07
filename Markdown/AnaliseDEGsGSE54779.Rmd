@@ -1,0 +1,50 @@
+---
+title: "R Notebook"
+output: html_notebook
+date: "`r Sys.Date()`"
+author: Marcel Ferreira @marceelrf
+---
+
+# Geral
+```{r, echo=FALSE}
+library(tidyverse)
+```
+
+
+# Pré
+- Dados se encontram em [GSE54779](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE54779).  
+- A expressão diferencial foi realizada utilizando [geo2r](https://www.ncbi.nlm.nih.gov/geo/geo2r/).  
+- `logFC` representa a diferença no tratamento de monócitos com sRANKL ou não. Ou seja, valores positivos aumento na expressão devido a este fator, negativos redução.  
+
+# Análise
+###Importar os dados do geo2r
+```{r}
+data <- read_tsv(file = "Data/GSE54779_OcMouse/geo2r_GSE54779.txt")
+
+```
+```{r}
+glimpse(data)
+```
+
+
+###Volcano plot
+```{r}
+data %>% 
+  mutate(Cond = ifelse(logFC >= 1 & adj.P.Val < .01,"Up",
+                       ifelse(logFC <= -1  & adj.P.Val < .01,"Down","ns"))) %>% 
+  ggplot(aes(x = logFC, y = -log10(adj.P.Val),col = Cond)) +
+  geom_point() +
+  scale_color_manual(values = c("Up" = "Purple", "ns" = "black","Down" = "red")) +
+  theme_bw() +
+  labs(title = "Volcano plot GSE54779 - Monócitos tratados com sRANKL")
+```
+
+###Contar os DEGs
+```{r}
+data %>% 
+  mutate(Cond = ifelse(logFC >= 1 & adj.P.Val < .01,"Up",
+                       ifelse(logFC <= -1  & adj.P.Val < .01,"Down","ns"))) %>% 
+  group_by(Cond) %>%
+  tally()
+```
+
